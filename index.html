@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>NOIZMAKER 二手美車</title>
+    <style>
+      :root {
+        --nm-orange: #ffa500;
+        --nm-gray: #4a4a4a;
+        --nm-light-gray: #696969;
+        --nm-dark-gray: #2a2a2a;
+      }
+
+      body {
+        font-family: "Oswald", "Arial Black", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--nm-dark-gray);
+        color: #d9d9d9;
+      }
+
+      header {
+        background-color: var(--nm-gray);
+        color: var(--nm-orange);
+        text-align: center;
+        padding: 1em;
+        border-bottom: 3px solid var(--nm-orange);
+      }
+
+      h1 {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+      }
+
+      .logo {
+        max-width: 200px;
+        height: 50px;
+        border-radius: 10px;
+        margin-right: 15px;
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 30px;
+      }
+
+      .product-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--nm-gray);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 15px rgba(255, 165, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        padding: 15px;
+      }
+
+      .product-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 165, 0, 0.4);
+      }
+
+      .product-item img {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        background-color: var(--nm-dark-gray);
+      }
+
+      .product-item h3 {
+        padding: 15px;
+        margin: 0;
+        text-align: left;
+        color: var(--nm-orange);
+        font-family: "Oswald", "Arial Black", sans-serif;
+        text-transform: uppercase;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .modal-content {
+        background-color: var(--nm-gray);
+        margin: 10% auto;
+        padding: 30px;
+        border: 2px solid var(--nm-orange);
+        width: 80%;
+        max-width: 700px;
+        border-radius: 8px;
+        box-shadow: 0 0 25px rgba(255, 165, 0, 0.3);
+        margin-bottom: 100px;
+      }
+
+      .close {
+        color: var(--nm-orange);
+        float: right;
+        font-size: 36px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        margin-right: -20px;
+        margin-top: -40px;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #ffd700;
+      }
+
+      .product-slider {
+        position: relative;
+        height: 350px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background-color: var(--nm-dark-gray);
+      }
+
+      .product-slider img {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* margin: auto; */
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        border-radius: 8px;
+        /* margin-bottom: 20px; */
+        background-color: var(--nm-dark-gray);
+      }
+
+      .product-slider img.active {
+        opacity: 1;
+      }
+
+      #modalProductTitle {
+        color: var(--nm-orange);
+        /* font-family: "Impact", "Arial Black", sans-serif; */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      #modalProductDescription {
+        color: #d9d9d9;
+        line-height: 1.6;
+      }
+
+      #modalProductPrice {
+        color: #d9d9d9;
+        line-height: 1.6;
+      }
+
+      #modalProductLink {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background-color: var(--nm-orange);
+        color: var(--nm-dark-gray);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+      }
+
+      #modalProductLink:hover {
+        background-color: #ffd700;
+      }
+
+      .slider-counter {
+        text-align: center;
+        font-size: 14px;
+        color: var(--nm-orange);
+      }
+      .product-slider-container {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .product-slider {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .product-slider img {
+        flex: 0 0 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+
+      .slider-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .slider-arrow-left {
+        left: 10px;
+      }
+
+      .slider-arrow-right {
+        right: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .slider-arrow {
+          display: none;
+        }
+
+        header h1 {
+          font-size: 18px;
+        }
+      }
+
+      /* footer */
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      footer {
+        background-color: var(--nm-dark-gray);
+        color: var(--nm-orange);
+        text-align: center;
+        border-top: 3px solid var(--nm-orange);
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+      }
+
+      .footer-icons {
+        display: flex;
+        gap: 15px;
+        margin-left: 10px;
+      }
+
+      .footer-icons a {
+        color: var(--nm-orange);
+        font-size: 24px;
+        transition: color 0.3s ease;
+        text-decoration: none;
+      }
+
+      .footer-icons a:hover {
+        color: var(--nm-orange);
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <img src="images/logo.png" alt="Noizmaker Logo" class="logo" />
+        <h1>NOIZMAKER 二手美車</h1>
+      </div>
+    </header>
+
+    <main>
+      <div class="product-grid" id="productGrid">
+        <!-- 商品項目將通過 JavaScript 動態添加 -->
+      </div>
+    </main>
+
+    <!-- 商品詳情模態框 -->
+    <div id="productModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="product-slider-container">
+          <div class="product-slider" id="productSlider">
+            <!-- 照片將通過 JavaScript 動態添加 -->
+          </div>
+          <button class="slider-arrow slider-arrow-left" id="sliderPrev">
+            &lt;
+          </button>
+          <button class="slider-arrow slider-arrow-right" id="sliderNext">
+            &gt;
+          </button>
+        </div>
+        <div id="sliderCounter" class="slider-counter"></div>
+        <h2 id="modalProductTitle"></h2>
+        <h3 id="modalProductPrice"></h3>
+        <p id="modalProductDescription"></p>
+        <a id="modalProductLink" href="https://lin.ee/cJyHrqW" target="_blank"
+          >加入LINE官方帳號了解更多</a
+        >
+      </div>
+    </div>
+    <footer>
+      <div class="footer-content">
+        <p>關注我們</p>
+        <div class="footer-icons">
+          <a
+            href="https://www.facebook.com/NoizMakerworkshop"
+            target="_blank"
+            class="fab fa-facebook-f"
+          ></a>
+          <a
+            href="https://www.instagram.com/noizmaker_workshop/"
+            target="_blank"
+            class="fab fa-instagram"
+          ></a>
+          <a
+            href="https://lin.ee/cJyHrqW"
+            target="_blank"
+            class="fab fa-line"
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("products.json")
+          .then((response) => response.json())
+          .then((products) => {
+            console.log(products);
+
+            // 動態添加商品到網格
+            const productGrid = document.getElementById("productGrid");
+            products.forEach((product) => {
+              const productItem = document.createElement("div");
+              productItem.className = "product-item";
+              productItem.innerHTML = `
+                <img src="${product.images[0]}" alt="${product.title}">
+                <h3>${product.title}</h3>
+            `;
+              productItem.addEventListener("click", () => openModal(product));
+              productGrid.appendChild(productItem);
+            });
+
+            // 模態框相關
+            const modal = document.getElementById("productModal");
+            const closeBtn = document.getElementsByClassName("close")[0];
+            const modalTitle = document.getElementById("modalProductTitle");
+            const modalDescription = document.getElementById(
+              "modalProductDescription"
+            );
+            const modalPrice = document.getElementById("modalProductPrice");
+
+            console.log(modalDescription);
+            // const modalLink = document.getElementById("modalProductLink");
+            const productSlider = document.getElementById("productSlider");
+
+            closeBtn.onclick = () => {
+              modal.style.display = "none";
+              // stopSlideshow();
+            };
+
+            window.onclick = (event) => {
+              if (event.target == modal) {
+                modal.style.display = "none";
+                // stopSlideshow();
+              }
+            };
+
+            let currentIndex = 0;
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            function openModal(product) {
+              modalTitle.innerHTML = product.title;
+              modalDescription.innerHTML = product.description.replace(
+                /\n/g,
+                "<br>"
+              );
+
+              modalPrice.innerHTML = `NT$ ${product.price}`;
+              // modalLink.href = product.link;
+
+              // 清空並添加新的圖片到輪播
+              productSlider.innerHTML = "";
+              product.images.forEach((img, index) => {
+                const imgElement = document.createElement("img");
+                imgElement.src = img;
+                imgElement.alt = `${product.title} - 圖片 ${index + 1}`;
+                if (index === 0) imgElement.classList.add("active"); // Add active class to the first image
+                productSlider.appendChild(imgElement);
+              });
+
+              currentIndex = 0;
+              updateSlider();
+              modal.style.display = "block";
+            }
+
+            function updateSlider() {
+              const translateX = -currentIndex * 100;
+              productSlider.style.transform = `translateX(${translateX}%)`;
+              // Update active class
+              Array.from(productSlider.children).forEach((img, index) => {
+                img.classList.toggle("active", index === currentIndex);
+              });
+              updateSliderCounter(
+                currentIndex + 1,
+                productSlider.children.length
+              );
+            }
+
+            function updateSliderCounter(current, total) {
+              document.getElementById(
+                "sliderCounter"
+              ).textContent = `圖片 ${current} / ${total}`;
+            }
+
+            function nextSlide() {
+              if (currentIndex < productSlider.children.length - 1) {
+                currentIndex++;
+                updateSlider();
+              }
+            }
+
+            function prevSlide() {
+              if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+              }
+            }
+
+            document
+              .getElementById("sliderNext")
+              .addEventListener("click", nextSlide);
+            document
+              .getElementById("sliderPrev")
+              .addEventListener("click", prevSlide);
+
+            // 觸摸事件處理
+            productSlider.addEventListener("touchstart", (e) => {
+              touchStartX = e.changedTouches[0].screenX;
+              console.log(touchStartX);
+            });
+
+            productSlider.addEventListener("touchend", (e) => {
+              touchEndX = e.changedTouches[0].screenX;
+              handleSwipe();
+            });
+
+            function handleSwipe() {
+              console.log("handleSwipe");
+              const swipeThreshold = 50; // 最小滑動距離
+              if (touchStartX - touchEndX > swipeThreshold) {
+                nextSlide();
+              } else if (touchEndX - touchStartX > swipeThreshold) {
+                prevSlide();
+              }
+            }
+
+            // 鍵盤事件處理（可選）
+            document.addEventListener("keydown", (e) => {
+              if (modal.style.display === "block") {
+                if (e.key === "ArrowRight") {
+                  nextSlide();
+                } else if (e.key === "ArrowLeft") {
+                  prevSlide();
+                }
+              }
+            });
+          })
+          .catch((error) => console.error("Error loading products:", error));
+      });
+    </script>
+  </body>
+</html>
