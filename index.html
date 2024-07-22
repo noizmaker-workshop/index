@@ -241,7 +241,7 @@
 
       @media (max-width: 768px) {
         .slider-arrow {
-          display: none;
+          display: block;
         }
 
         header h1 {
@@ -476,27 +476,6 @@
             document
               .getElementById("sliderPrev")
               .addEventListener("click", prevSlide);
-
-            // 觸摸事件處理
-            productSlider.addEventListener("touchstart", (e) => {
-              touchStartX = e.changedTouches[0].screenX;
-              console.log(touchStartX);
-            });
-
-            productSlider.addEventListener("touchend", (e) => {
-              touchEndX = e.changedTouches[0].screenX;
-              handleSwipe();
-            });
-
-            function handleSwipe() {
-              console.log("handleSwipe");
-              const swipeThreshold = 50; // 最小滑動距離
-              if (touchStartX - touchEndX > swipeThreshold) {
-                nextSlide();
-              } else if (touchEndX - touchStartX > swipeThreshold) {
-                prevSlide();
-              }
-            }
 
             // 鍵盤事件處理（可選）
             document.addEventListener("keydown", (e) => {
