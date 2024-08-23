@@ -406,19 +406,24 @@
             );
             const modalPrice = document.getElementById("modalProductPrice");
 
-            console.log(modalDescription);
-            // const modalLink = document.getElementById("modalProductLink");
             const productSlider = document.getElementById("productSlider");
+
+            const cleanURLParam = () => {
+              const currentURL = new URL(window.location.href);
+              currentURL.search = "";
+              const cleanURL = currentURL.toString();
+              history.pushState(null, "", cleanURL);
+            };
 
             closeBtn.onclick = () => {
               modal.style.display = "none";
-              // stopSlideshow();
+              cleanURLParam();
             };
 
             window.onclick = (event) => {
               if (event.target == modal) {
                 modal.style.display = "none";
-                // stopSlideshow();
+                cleanURLParam();
               }
             };
 
@@ -449,7 +454,11 @@
               currentIndex = 0;
               updateSlider();
               modal.style.display = "block";
+              // Update URL with product id
+              history.pushState(null, "", `?product=${product.id}`);
             }
+
+            checkUrlForProduct(products);
 
             function updateSlider() {
               const translateX = -currentIndex * 100;
@@ -500,6 +509,20 @@
                   prevSlide();
                 }
               }
+            });
+
+            function checkUrlForProduct(products) {
+              const urlParams = new URLSearchParams(window.location.search);
+              const productId = urlParams.get("product");
+              if (productId !== null && productId <= products.length) {
+                const product = products.find((item) => {
+                  return item.id == productId;
+                });
+                openModal(product);
+              }
+            }
+            window.addEventListener("popstate", function (event) {
+              checkUrlForProduct();
             });
           })
           .catch((error) => console.error("Error loading products:", error));
