@@ -85,6 +85,22 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
         padding: 15px;
+        position: relative;
+      }
+
+      .sold-out-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        display: flex;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        padding-top: 105px;
       }
 
       .product-item:hover {
@@ -383,16 +399,28 @@
           .then((response) => response.json())
           .then((products) => {
             console.log(products);
+            // 排序產品
+            products.sort((a, b) => {
+              if (a.isSold === b.isSold) return 0;
+              return a.isSold ? 1 : -1;
+            });
 
             // 動態添加商品到網格
             const productGrid = document.getElementById("productGrid");
             products.forEach((product) => {
               const productItem = document.createElement("div");
               productItem.className = "product-item";
-              productItem.innerHTML = `
+
+              let productContent = `
                 <img src="${product.images[0]}" alt="${product.title}">
                 <h3>${product.title}</h3>
-            `;
+              `;
+
+              if (product.isSold) {
+                productContent += '<div class="sold-out-overlay">已售出</div>';
+              }
+
+              productItem.innerHTML = productContent;
               productItem.addEventListener("click", () => openModal(product));
               productGrid.appendChild(productItem);
             });
@@ -438,7 +466,9 @@
                 "<br>"
               );
 
-              modalPrice.innerHTML = `NT$ ${product.price}`;
+              modalPrice.innerHTML = product.isSold
+                ? `<del>NT$ ${product.price}</del><span style="color: red";>(已售出)<span>`
+                : `NT$ ${product.price}`;
               // modalLink.href = product.link;
 
               // 清空並添加新的圖片到輪播
