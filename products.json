@@ -99,11 +99,17 @@
   {
     "id": 7,
     "title": "2017 HARLEY-DAVIDSON 哈雷 XL883L",
-    "images": ["images/logo.png"],
+    "images": [
+      "images/XL883L/001.jpg",
+      "images/XL883L/002.jpg",
+      "images/XL883L/003.jpg",
+      "images/XL883L/004.jpg",
+      "images/XL883L/005.jpg"
+    ],
     "description": "里程數159XX km",
     "link": "",
     "model": "XL883L",
-    "price": "",
+    "price": "360,000",
     "isSold": false
   },
   {
