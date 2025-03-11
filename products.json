@@ -13,7 +13,7 @@
     "link": "",
     "model": "fltrx",
     "price": "1,580,000",
-    "isSold": false
+    "isSold": true
   },
   {
     "id": 2,
@@ -28,7 +28,7 @@
     "link": "",
     "model": "883N",
     "price": "460,000",
-    "isSold": false
+    "isSold": true
   },
   {
     "id": 3,
@@ -43,7 +43,7 @@
     "link": "",
     "model": "XL883N",
     "price": "480,000",
-    "isSold": false
+    "isSold": true
   },
   {
     "id": 4,
@@ -61,7 +61,7 @@
     "link": "",
     "model": "FXDC",
     "price": "420,000",
-    "isSold": false
+    "isSold": true
   },
   {
     "id": 5,
@@ -110,7 +110,7 @@
     "link": "",
     "model": "XL883L",
     "price": "360,000",
-    "isSold": false
+    "isSold": true
   },
   {
     "id": 8,
@@ -140,6 +140,6 @@
     "link": "",
     "model": "FLTRX",
     "price": "398,000",
-    "isSold": false
+    "isSold": true
   }
 ]
